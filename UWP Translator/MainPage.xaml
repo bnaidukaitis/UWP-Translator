@@ -1,0 +1,132 @@
+﻿<Page
+    x:Class="UWP_Translator.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWP_Translator"
+    xmlns:classes="using:UWP_Translator.Classes"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" >
+
+    <Grid x:Name="mpGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Narrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="mpSplitView.IsPaneOpen" Value="False" />
+                        <Setter Target="mpSplitView.DisplayMode" Value="Overlay" />
+                        <Setter Target="mpContentBox.FontSize" Value="18" />
+                        <Setter Target="mpMessageBox.(RelativePanel.AlignTopWithPanel)" Value="True" />
+                        <Setter Target="mpComboBoxPanel.(RelativePanel.AlignRightWithPanel)" Value="False" />
+                        <Setter Target="mpComboBoxPanel.(RelativePanel.AlignLeftWithPanel)" Value="True" />
+                        <Setter Target="mpComboBoxPanel.(RelativePanel.Below)" Value="mpMessageBox" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Compact">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="720" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="mpSplitView.IsPaneOpen" Value="False" />
+                        <Setter Target="mpSplitView.DisplayMode" Value="CompactOverlay" />
+                        <Setter Target="mpContentBox.FontSize" Value="18" />
+                        <Setter Target="mpMessageBox.(RelativePanel.AlignTopWithPanel)" Value="True" />
+                        <Setter Target="mpComboBoxPanel.(RelativePanel.AlignRightWithPanel)" Value="True" />
+                        <Setter Target="mpComboBoxPanel.(RelativePanel.AlignLeftWithPanel)" Value="False" />
+                        <Setter Target="mpComboBoxPanel.(RelativePanel.AlignTopWithPanel)" Value="True" />
+                    </VisualState.Setters>
+                </VisualState>
+                
+                <!--<VisualState x:Name="Wide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1024" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="mpSplitView.IsPaneOpen" Value="False" />
+                        <Setter Target="mpSplitView.DisplayMode" Value="CompactInline" />
+                        <Setter Target="mpContentBox.FontSize" Value="18" />
+                        <Setter Target="mpMessageBox.(RelativePanel.AlignTopWithPanel)" Value="True" />
+                        <Setter Target="mpComboBox.(RelativePanel.AlignRightWithPanel)" Value="True" />
+                        <Setter Target="mpComboBox.(RelativePanel.AlighTopWithPanel)" Value="True" />
+                    </VisualState.Setters>
+                </VisualState>-->
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <!--Hamburger button and title panel-->
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button x:Name="mpSplitViewToggle" Background="#227733FF" Width="{Binding ElementName=mpSplitView, Path=CompactPaneLength}" Height="{Binding ElementName=mpSplitView, Path=CompactPaneLength}" Click="mpSplitViewToggle_Click">
+                <StackPanel>
+                    <Rectangle Width="24" Height="2" Margin="2" Fill="Black" />
+                    <Rectangle Width="24" Height="2" Margin="2" Fill="Black" />
+                    <Rectangle Width="24" Height="2" Margin="2" Fill="Black" />
+                </StackPanel>
+            </Button>
+            <TextBlock x:Name="mpTitlePanel" MinHeight="30" FontSize="18" FontWeight="Bold" HorizontalAlignment="Left" Margin="10,5,10,0">FRIES/MITRE/Pitt Translator</TextBlock>
+        </StackPanel>
+
+        <!-- SplitView for sidebar panel -->
+        <SplitView Name="mpSplitView" DisplayMode="CompactOverlay" IsPaneOpen="False" Grid.Row="1">
+            <!--<SplitView.PaneBackground>
+                <SolidColorBrush Color="White" Opacity="0.4" />
+            </SplitView.PaneBackground>
+            <SplitView.Background>
+                <SolidColorBrush Color="#BBFFEE" Opacity="0.3" />
+            </SplitView.Background>-->
+            <SplitView.Pane >
+                <StackPanel Margin="0,0,0,0">
+                    <RadioButton x:Name="mpRadioButtonHome" Tag="Home">
+                        <StackPanel Orientation="Horizontal">
+                            <SymbolIcon Symbol="Home" Foreground="Black"/>
+                            <TextBlock Margin="15,0,0,0" Text="Home" Foreground="Black"/>
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton Tag="Settings" Click="RadioButton_Click"  >
+                        <StackPanel Orientation="Horizontal">
+                            <SymbolIcon Symbol="Setting" Foreground="Black" />
+                            <TextBlock Margin="15,0,0,0" Text="Settings" Foreground="Black"/>
+                        </StackPanel>
+                    </RadioButton>
+
+                </StackPanel>
+            </SplitView.Pane>
+
+            <SplitView.Content>
+                <!-- TextBlocks for message box and content box -->
+                <StackPanel>
+                    <RelativePanel Width="{Binding ElementName=mpGrid, Path=Width}">
+                        <TextBlock Name="mpMessageBox" MinHeight="30" Width="Auto" Margin="10,10,10,10" FontSize="18" Text="" RelativePanel.AlignLeftWithPanel="True" />
+                        <StackPanel x:Name="mpComboBoxPanel" Orientation="Horizontal" Width="Auto" Height="Auto" Margin="150,10,10,10" RelativePanel.RightOf="mpMessageBox" RelativePanel.AlignRightWithPanel="True" Visibility="Collapsed">
+                            <TextBlock FontSize="18" FontWeight="Bold" Text="Display format:" />
+                            <ComboBox x:Name="mpComboBox" Width="160" Margin="20,0,0,0" SelectionChanged="mpComboBox_SelectionChanged" Loaded="mpComboBox_Loaded" />
+                        </StackPanel>
+                    </RelativePanel>
+                    <ScrollViewer Height="400" MinHeight="300" Width="Auto" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" KeyDown="mpContentBox_KeyUp">
+                        <TextBlock Name="mpContentBox" IsTextSelectionEnabled="False" Margin="10,10,10,10" HorizontalAlignment="Left" FontSize="18" TextWrapping="Wrap" Text="" KeyDown="mpContentBox_KeyUp" ></TextBlock>
+                    </ScrollViewer>
+                    <StackPanel Orientation="Horizontal" Width="Auto" Height="100" Margin="10,10,10,20" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                        <Button Name="mpButtonLoadFile" Height="100" Width="150" HorizontalAlignment="Left" Background="#AAFFEE" BorderBrush="AliceBlue" VerticalAlignment="Bottom" Margin="30,0,30,0" FontSize="18" Click="mpButtonLoadFile_Click">Load File</Button>
+                        <Button Name="mpButtonLoadFolder" Height="100" Width="150" HorizontalAlignment="Left" Background="#AAFFEE" BorderBrush="AliceBlue" VerticalAlignment="Bottom" Margin="30,0,30,0" FontSize="18" Click="mpButtonLoadFolder_Click">Load Folder</Button>
+                        <Button Name="mpButtonTranslate" Height="100" Width="150" HorizontalAlignment="Left" Background="#AAFFEE" BorderBrush="AliceBlue" VerticalAlignment="Bottom" Margin="30,0,30,0" FontSize="18" Visibility="Collapsed" Click="mpButtonTranslate_Click">Translate</Button>
+                        <Button Name="mpButtonAddContextsAndEntities" Height="100" Width="150" HorizontalAlignment="Left" Background="#AAFFEE" BorderBrush="AliceBlue" VerticalAlignment="Bottom" Margin="30,0,30,0" FontSize="18" Visibility="Collapsed" Click="mpButtonAddContextsAndEntities_Click">
+                            <TextBlock Text="Add Context and Entity Info" TextWrapping="Wrap"></TextBlock>
+                        </Button>
+                        <Button Name="mpButtonPrepareToPrint" Height="100" Width="150" HorizontalAlignment="Left" Background="#AAFFEE" BorderBrush="AliceBlue" VerticalAlignment="Bottom" Margin="30,0,30,0" FontSize="18" Visibility="Collapsed" Click="mpButtonPrepareToPrint_Click">Cleanup Data</Button>
+                        <Button Name="mpButtonSave" Height="100" Width="150" HorizontalAlignment="Left" Background="#AAFFEE" BorderBrush="AliceBlue" VerticalAlignment="Bottom" Margin="30,0,30,0" FontSize="18" Visibility="Collapsed" Click="mpButtonSave_Click">Save</Button>
+                    </StackPanel>
+                </StackPanel>
+            </SplitView.Content>
+        </SplitView>
+
+    </Grid>
+</Page>
